@@ -13,10 +13,10 @@ REM запуск программы с несуществующим файлом
 IF NOT ERRORLEVEL 1 GOTO err  
 
 REM запуск программы с несуществующей в тексте строкой 
-REM %PROGRAM% test\input.txt output.txt "nastya" "*"                                  
-REM IF ERRORLEVEL 1 GOTO err 
-REM FC output.txt test\outputExistString.txt 
-REM IF ERRORLEVEL 1 GOTO err  
+%PROGRAM% test\input.txt output.txt "nastya" "*"                                  
+IF ERRORLEVEL 1 GOTO err 
+FC output.txt test\outputExistString.txt 
+IF ERRORLEVEL 1 GOTO err  
 
 REM запуск программы с нулевой искомой строкой
 %PROGRAM% test\input.txt output.txt "" "*"                                  
@@ -39,7 +39,7 @@ IF ERRORLEVEL 1 GOTO err
 REM запуск программы с заменой искомой строки на нулевую строку 
 %PROGRAM% test\input.txt output.txt "ma" ""                                  
 IF ERRORLEVEL 1 GOTO err 
-FC output.txt test\outputEmptyString.txt 
+FC output.txt test\outputEmptyReplacementString.txt 
 IF ERRORLEVEL 1 GOTO err 
 
 REM запуск программы с заменой искомой строки 1231234 на любую строку 

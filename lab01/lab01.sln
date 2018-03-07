@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.27130.2027
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "replace", "replace\replace.vcxproj", "{53600A63-ED5B-47EA-A0AF-6460CF8BC931}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "flipbyte", "flipbyte\flipbyte.vcxproj", "{649AD245-3688-4FA9-A5C7-1E757C5CE11E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -21,6 +23,14 @@ Global
 		{53600A63-ED5B-47EA-A0AF-6460CF8BC931}.Release|x64.Build.0 = Release|x64
 		{53600A63-ED5B-47EA-A0AF-6460CF8BC931}.Release|x86.ActiveCfg = Release|Win32
 		{53600A63-ED5B-47EA-A0AF-6460CF8BC931}.Release|x86.Build.0 = Release|Win32
+		{649AD245-3688-4FA9-A5C7-1E757C5CE11E}.Debug|x64.ActiveCfg = Debug|x64
+		{649AD245-3688-4FA9-A5C7-1E757C5CE11E}.Debug|x64.Build.0 = Debug|x64
+		{649AD245-3688-4FA9-A5C7-1E757C5CE11E}.Debug|x86.ActiveCfg = Debug|Win32
+		{649AD245-3688-4FA9-A5C7-1E757C5CE11E}.Debug|x86.Build.0 = Debug|Win32
+		{649AD245-3688-4FA9-A5C7-1E757C5CE11E}.Release|x64.ActiveCfg = Release|x64
+		{649AD245-3688-4FA9-A5C7-1E757C5CE11E}.Release|x64.Build.0 = Release|x64
+		{649AD245-3688-4FA9-A5C7-1E757C5CE11E}.Release|x86.ActiveCfg = Release|Win32
+		{649AD245-3688-4FA9-A5C7-1E757C5CE11E}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
