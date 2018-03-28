@@ -31,15 +31,12 @@ void ProcessVector(std::vector<double>& vectorOfNumbers)
 			element += ARITHMETIC_MEAN;
 		}
 
-		if (MIN_NUMBER == MAX_NUMBER)
+		if ((MIN_NUMBER == MAX_NUMBER) && (MIN_NUMBER == 0))
 		{
-			if (MIN_NUMBER == 0)
+			for (auto& element : vectorOfNumbers)
 			{
-				for (auto& element : vectorOfNumbers)
-				{
-					element = 0.0;
-				}
-			}			
+				element = 0.0;
+			}
 		}
 	}
 }
