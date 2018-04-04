@@ -12,7 +12,7 @@ void ProcessVector(std::vector<double>& vectorOfNumbers)
 	{
 		double sum = 0;
 		int count = 0;
-		for (auto& element : vectorOfNumbers)
+		for (auto element : vectorOfNumbers)
 		{
 			if (element > 0)
 			{
@@ -20,12 +20,12 @@ void ProcessVector(std::vector<double>& vectorOfNumbers)
 				count++;
 			}
 		}
-
-		const double ARITHMETIC_MEAN = (count == 0) ? 0 : sum / count;
+		
+		const double arithmeticMean = (count == 0) ? 0 : sum / count;
 		
 		for (auto& element : vectorOfNumbers)
 		{
-			element += ARITHMETIC_MEAN;
+			element += arithmeticMean;
 		}
 	}
 }

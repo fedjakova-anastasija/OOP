@@ -6,7 +6,7 @@
 
 int main()
 {
-	if (!DecodeHtmlCharacters(std::cin, std::cout))
+	if (!DecodeHtmlEntities(std::cin, std::cout))
 	{
 		return 1;
 	}

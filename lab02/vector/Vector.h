@@ -1,6 +1,8 @@
 #pragma once
-
-#include "stdafx.h"
+#include <iostream>
+#include <iterator>
+#include <vector>
+#include <iomanip>
 
 void ReadVector(std::vector<double>& vectorOfNumbers);
 void ProcessVector(std::vector<double>& vectorOfNumbers);
