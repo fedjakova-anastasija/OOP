@@ -10,9 +10,6 @@ void ProcessVector(std::vector<double>& vectorOfNumbers)
 {
 	if (!vectorOfNumbers.empty())
 	{
-		const double MIN_NUMBER = *min_element(vectorOfNumbers.begin(), vectorOfNumbers.end());
-		const double MAX_NUMBER = *max_element(vectorOfNumbers.begin(), vectorOfNumbers.end());
-
 		double sum = 0;
 		int count = 0;
 		for (auto& element : vectorOfNumbers)
@@ -24,19 +21,11 @@ void ProcessVector(std::vector<double>& vectorOfNumbers)
 			}
 		}
 
-		const double ARITHMETIC_MEAN = sum / count;
-
+		const double ARITHMETIC_MEAN = (count == 0) ? 0 : sum / count;
+		
 		for (auto& element : vectorOfNumbers)
 		{
 			element += ARITHMETIC_MEAN;
-		}
-
-		if ((MIN_NUMBER == MAX_NUMBER) && (MIN_NUMBER == 0))
-		{
-			for (auto& element : vectorOfNumbers)
-			{
-				element = 0.0;
-			}
 		}
 	}
 }
