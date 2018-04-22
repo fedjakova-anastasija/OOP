@@ -23,6 +23,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NewFolder1", "NewFolder1", 
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "parserURL", "parserURL\parserURL.vcxproj", "{31E2BB8C-563D-4912-8486-C516B94E3BFE}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ParserURLTests", "ParserURLTests\ParserURLTests.vcxproj", "{36929633-B2A5-47EB-BC22-77638A7FE791}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -103,6 +105,14 @@ Global
 		{31E2BB8C-563D-4912-8486-C516B94E3BFE}.Release|x64.Build.0 = Release|x64
 		{31E2BB8C-563D-4912-8486-C516B94E3BFE}.Release|x86.ActiveCfg = Release|Win32
 		{31E2BB8C-563D-4912-8486-C516B94E3BFE}.Release|x86.Build.0 = Release|Win32
+		{36929633-B2A5-47EB-BC22-77638A7FE791}.Debug|x64.ActiveCfg = Debug|x64
+		{36929633-B2A5-47EB-BC22-77638A7FE791}.Debug|x64.Build.0 = Debug|x64
+		{36929633-B2A5-47EB-BC22-77638A7FE791}.Debug|x86.ActiveCfg = Debug|Win32
+		{36929633-B2A5-47EB-BC22-77638A7FE791}.Debug|x86.Build.0 = Debug|Win32
+		{36929633-B2A5-47EB-BC22-77638A7FE791}.Release|x64.ActiveCfg = Release|x64
+		{36929633-B2A5-47EB-BC22-77638A7FE791}.Release|x64.Build.0 = Release|x64
+		{36929633-B2A5-47EB-BC22-77638A7FE791}.Release|x86.ActiveCfg = Release|Win32
+		{36929633-B2A5-47EB-BC22-77638A7FE791}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
