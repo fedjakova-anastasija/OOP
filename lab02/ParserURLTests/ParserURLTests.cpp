@@ -8,7 +8,7 @@ const std::map<Protocol, int> DEFAULT_PORT = {
 	{ Protocol::FTP, 21 },
 };
 
-bool CheckParseURL(const std::string url, Protocol protocolExpected,
+bool CheckParseURL(const std::string &url, Protocol protocolExpected,
 	const std::string& hostExpected, const std::string& documentExpected)
 {
 	const int portExpected = DEFAULT_PORT.at(protocolExpected);

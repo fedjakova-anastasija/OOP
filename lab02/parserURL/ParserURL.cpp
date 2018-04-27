@@ -5,6 +5,24 @@
 #include <regex>
 #include <sstream>
 
+namespace
+{
+const std::map<Protocol, int> DEFAULT_PORT = {
+	{ Protocol::HTTP, 80 },
+	{ Protocol::HTTPS, 443 },
+	{ Protocol::FTP, 21 },
+};
+
+const std::map<Protocol, std::string> MATCH_PROTOCOL = {
+	{ Protocol::HTTP, "http" },
+	{ Protocol::HTTPS, "https" },
+	{ Protocol::FTP, "ftp" },
+};
+
+const int MIN_BOUND = 1;
+const int MAX_BOUND = 65535;
+} // namespace
+
 void ParseURLs(std::istream& input, std::ostream& output)
 {
 	std::string url;
@@ -41,29 +59,16 @@ Protocol ParseProtocol(const std::string& protocolStr)
 {
 	std::string protocol;
 	transform(protocolStr.begin(), protocolStr.end(), back_inserter(protocol), tolower);
-	if (protocol == "http")
+	for (const auto& item : MATCH_PROTOCOL)
 	{
-		return Protocol::HTTP;
+		if (protocol == item.second)
+		{
+			return item.first;
+		}
 	}
-	if (protocol == "https")
-	{
-		return Protocol::HTTPS;
-	}
-	if (protocol == "ftp")
-	{
-		return Protocol::FTP;
-	}
-	throw std::exception("Unknown protocol");
+
+	throw std::invalid_argument("Unknown protocol");
 }
-
-const std::map<Protocol, int> DEFAULT_PORT = {
-	{ Protocol::HTTP, 80 },
-	{ Protocol::HTTPS, 443 },
-	{ Protocol::FTP, 21 },
-};
-
-const int MIN_BOUND = 1;
-const int MAX_BOUND = 65535;
 
 void TryParseURL(const std::string& url, Protocol& protocol, int& port, std::string& host, std::string& document)
 {
@@ -87,7 +92,7 @@ void TryParseURL(const std::string& url, Protocol& protocol, int& port, std::str
 
 	if (port < MIN_BOUND || port > MAX_BOUND)
 	{
-		throw std::exception("Port is out of range 1, 65535");
+		throw std::invalid_argument("Port is out of range 1, 65535");
 	}
 
 	document = urlMatch[4];
@@ -103,11 +108,6 @@ bool ParseURL(const std::string& url, Protocol& protocol, int& port, std::string
 	catch (const std::exception& e)
 	{
 		std::cerr << e.what() << std::endl;
-		return false;
-	}
-	catch (...)
-	{
-		std::cerr << "Unknown exception" << std::endl;
 		return false;
 	}
 }
