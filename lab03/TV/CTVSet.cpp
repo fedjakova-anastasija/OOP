@@ -2,6 +2,12 @@
 #include "CTVSet.h"
 #include <utility>
 
+namespace
+{
+	const int FIRST_CHANNEL = 1;
+	const int LAST_CHANNEL = 99;
+}
+
 CTVSet::CTVSet()
 {
 }
@@ -17,7 +23,7 @@ bool CTVSet::IsTurnedOn() const
 
 bool CTVSet::SelectChannel(int channel)
 {
-	if ((m_isOn) && (channel <= 99) && (channel >= 1))
+	if ((m_isOn) && (channel <= LAST_CHANNEL) && (channel >= FIRST_CHANNEL))
 	{
 		m_previousChannel = m_selectedChannel;
 		m_selectedChannel = channel;

@@ -97,7 +97,7 @@ bool CRemoteControl::SelectChannel(std::istream& args)
 
 bool CRemoteControl::SelectPreviousChannel(std::istream&)
 {
-	if (m_tv.IsTurnedOn()) 
+	if (m_tv.IsTurnedOn())
 	{
 		m_tv.SelectPreviousChannel();
 		m_output << "Previous channel selected" << std::endl;
@@ -121,7 +121,7 @@ bool CRemoteControl::Info(std::istream&)
 
 	if (!channels.empty())
 	{
-		for (const auto &channel : channels)
+		for (const auto& channel : channels)
 		{
 			m_output << channel.first << " - " << channel.second << std::endl;
 		}
@@ -135,32 +135,44 @@ void CRemoteControl::GetChannelByName(std::istream& args)
 	std::string channelName;
 	args >> channelName;
 
+	Channels channels = m_tv.GetAllChannels();
+
 	if (channelName.empty())
 	{
 		m_output << "Channel name can not be empty" << std::endl;
 	}
-	else if (!m_tv.SelectChannel(channelName))
+	else if (!channels.empty())
 	{
-		m_output << "Failed to select channel" << std::endl;
-	}
-	else
-	{
-		m_output << "Succeded to select channel" << std::endl;
+		for (const auto& channel : channels)
+		{
+			if (channelName == channel.second)
+			{
+				m_output << channel.first << " - " << channel.second << std::endl;
+			}
+		}
 	}
 }
 
 void CRemoteControl::GetChannelName(std::istream& args)
 {
 	int channelNumber;
-	args >> channelNumber;
+	args >> channelNumber;	
+	
+	Channels channels = m_tv.GetAllChannels();
 
 	if (!m_tv.SelectChannel(channelNumber))
 	{
 		m_output << "Failed to select channel" << std::endl;
 	}
-	else
+	else if (!channels.empty())
 	{
-		m_output << "Succeded to select channel" << std::endl;
+		for (const auto& channel : channels)
+		{
+			if (channelNumber == channel.first)
+			{
+				m_output << channel.first << " - " << channel.second << std::endl;
+			}
+		}
 	}
 }
 
@@ -191,10 +203,10 @@ void CRemoteControl::DeleteChannelName(std::istream& args)
 	}
 	else if (!m_tv.DeleteChannelName(channelName))
 	{
-		m_output << "Failed to select channel" << std::endl;
+		m_output << "Failed to delete channel" << std::endl;
 	}
 	else
 	{
-		m_output << "Succeded to select channel" << std::endl;
+		m_output << "Succeded to delete channel" << std::endl;
 	}
 }
