@@ -21,8 +21,8 @@ private:
 	void AddLine(std::istream& args);
 	void AddRectangle(std::istream& args);
 	void AddTriangle(std::istream& args);
-	void GetMinPerimeterShape(std::istream& args) const;
-	void GetMaxAreaShape(std::istream& args) const;
+	void GetShapeWithMinPerimeter(std::istream& args) const;
+	void GetShapeWithMaxArea(std::istream& args) const;
 	void AddFFToColor(std::string& color) const;
 	void Info(std::istream& args);
 	void ArrayVoidCheck() const;

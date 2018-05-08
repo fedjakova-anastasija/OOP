@@ -10,8 +10,8 @@ CShapeMaker::CShapeMaker(std::istream& input, std::ostream& output)
 		{ ADD_RECTANGLE, bind(&CShapeMaker::AddRectangle, this, std::placeholders::_1) },
 		{ ADD_TRIANGLE, bind(&CShapeMaker::AddTriangle, this, std::placeholders::_1) },
 		{ ADD_LINE, bind(&CShapeMaker::AddLine, this, std::placeholders::_1) },
-		{ GET_MIN_PERIMETER, bind(&CShapeMaker::GetMinPerimeterShape, this, std::placeholders::_1) },
-		{ GET_MAX_AREA, bind(&CShapeMaker::GetMaxAreaShape, this, std::placeholders::_1) },
+		{ GET_MIN_PERIMETER, bind(&CShapeMaker::GetShapeWithMinPerimeter, this, std::placeholders::_1) },
+		{ GET_MAX_AREA, bind(&CShapeMaker::GetShapeWithMaxArea, this, std::placeholders::_1) },
 		{ DRAW_SHAPES, bind(&CShapeMaker::DrawShapes, this, std::placeholders::_1) },
 		{ INFO, bind(&CShapeMaker::Info, this, std::placeholders::_1) } })
 {
@@ -92,12 +92,12 @@ void CShapeMaker::DrawShapes(std::istream&)
 	}
 }
 
-void CShapeMaker::GetMinPerimeterShape(std::istream& args) const
+void CShapeMaker::GetShapeWithMinPerimeter(std::istream& args) const
 {
 	ArrayVoidCheck();
 
-	auto GetMinShapePtr = [](const std::shared_ptr<IShape>& a, const std::shared_ptr<IShape>& b) {
-		return a->GetPerimeter() < b->GetPerimeter();
+	auto GetMinShapePtr = [](const std::shared_ptr<IShape>& shapeFirst, const std::shared_ptr<IShape>& shapeSecond) {
+		return shapeFirst->GetPerimeter() < shapeSecond->GetPerimeter();
 	};
 
 	auto shapeWithMinPerimeter = *std::min_element(m_shapes.begin(), m_shapes.end(), GetMinShapePtr);
@@ -106,12 +106,12 @@ void CShapeMaker::GetMinPerimeterShape(std::istream& args) const
 	m_output << shapeWithMinPerimeter->ToString() << std::endl;
 }
 
-void CShapeMaker::GetMaxAreaShape(std::istream& args) const
+void CShapeMaker::GetShapeWithMaxArea(std::istream& args) const
 {
 	ArrayVoidCheck();
 
-	auto GetMaxShapePtr = [](const std::shared_ptr<IShape>& a, const std::shared_ptr<IShape>& b) {
-		return a->GetPerimeter() > b->GetPerimeter();
+	auto GetMaxShapePtr = [](const std::shared_ptr<IShape>& shapeFirst, const std::shared_ptr<IShape>& shapeSecond) {
+		return shapeFirst->GetArea() < shapeSecond->GetArea();
 	};
 
 	auto shapeWithMaxArea = *std::max_element(m_shapes.begin(), m_shapes.end(), GetMaxShapePtr);
