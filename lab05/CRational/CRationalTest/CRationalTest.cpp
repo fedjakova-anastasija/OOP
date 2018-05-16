@@ -8,7 +8,7 @@ void CheckValue(CRational const& rationalNumber, int expectedNumerator, int expe
 	REQUIRE(rationalNumber.GetDenominator() == expectedDenominator);
 }
 
-TEST_CASE(" ", "[CRational]")
+TEST_CASE("Check CRational", "[CRational]")
 {
 	SECTION("Rational number with numerator only")
 	{

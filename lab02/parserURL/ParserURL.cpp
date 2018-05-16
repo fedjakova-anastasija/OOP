@@ -7,12 +7,6 @@
 
 namespace
 {
-const std::map<Protocol, int> DEFAULT_PORT = {
-	{ Protocol::HTTP, 80 },
-	{ Protocol::HTTPS, 443 },
-	{ Protocol::FTP, 21 },
-};
-
 const std::map<Protocol, std::string> MATCH_PROTOCOL = {
 	{ Protocol::HTTP, "http" },
 	{ Protocol::HTTPS, "https" },
@@ -47,7 +41,7 @@ void ParseURLs(std::istream& input, std::ostream& output)
 	}
 }
 
-void PrintURLInfo(std::ostream& output, const std::string& url, Protocol& protocol, int& port, std::string& host, std::string& document)
+void PrintURLInfo(std::ostream& output, const std::string& url, Protocol& protocol, int port, const std::string& host, const std::string& document)
 {
 	output << url << std::endl
 		   << "HOST: " << host << std::endl
@@ -70,6 +64,22 @@ Protocol ParseProtocol(const std::string& protocolStr)
 	throw std::invalid_argument("Unknown protocol");
 }
 
+int ParsePort(const std::string& str, Protocol protocol)
+{
+	if (str.empty())
+	{
+		return static_cast<int>(protocol);
+	}
+
+	int port = std::stoi(str);
+	if (port < MIN_BOUND || port > MAX_BOUND)
+	{
+		throw std::invalid_argument("Port is out of range 1, 65535");
+	}
+
+	return port;
+}
+
 void TryParseURL(const std::string& url, Protocol& protocol, int& port, std::string& host, std::string& document)
 {
 	std::regex urlRegex(R"(^(\w+):\/\/([^\s:\/]+)(?::(\d+))?(?:\/(\S*))?$)", std::regex::icase);
@@ -82,19 +92,7 @@ void TryParseURL(const std::string& url, Protocol& protocol, int& port, std::str
 
 	protocol = ParseProtocol(urlMatch[1]);
 	host = urlMatch[2];
-	port = urlMatch[3].matched ? std::stoi(urlMatch[3]) : static_cast<int>(protocol);
-
-	const std::string str = urlMatch[3];
-	if (str.empty())
-	{
-		port = DEFAULT_PORT.at(protocol);
-	}
-
-	if (port < MIN_BOUND || port > MAX_BOUND)
-	{
-		throw std::invalid_argument("Port is out of range 1, 65535");
-	}
-
+	port = ParsePort(urlMatch[3], protocol);
 	document = urlMatch[4];
 }
 

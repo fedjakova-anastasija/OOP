@@ -2,16 +2,10 @@
 #include "../ParserURL/ParserURL.h"
 #include <map>
 
-const std::map<Protocol, int> DEFAULT_PORT = {
-	{ Protocol::HTTP, 80 },
-	{ Protocol::HTTPS, 443 },
-	{ Protocol::FTP, 21 },
-};
-
 bool CheckParseURL(const std::string &url, Protocol protocolExpected,
 	const std::string& hostExpected, const std::string& documentExpected)
 {
-	const int portExpected = DEFAULT_PORT.at(protocolExpected);
+	const int portExpected = static_cast<int>(protocolExpected);
 
 	int port;
 	std::string host;
@@ -63,5 +57,6 @@ TEST_CASE("Fails to parse port out of bounds", "[parseURL]")
 	std::string document;
 	Protocol protocol;
 	CHECK_FALSE(ParseURL("https://example.com:0", protocol, port, host, document));
+	CHECK(ParseURL("http://example.com:100", protocol, port, host, document));
 	CHECK_FALSE(ParseURL("http://example.com:65536", protocol, port, host, document));
 }

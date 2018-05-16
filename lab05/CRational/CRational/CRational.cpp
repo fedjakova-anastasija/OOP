@@ -37,21 +37,35 @@ double CRational::ToDouble() const
 	return numerator / denominator;
 }
 
-void CRational::Normalize()
+std::pair<int, CRational> CRational::ToCompoundFraction() const
 {
-	int gcd;
-	int numerator = abs(m_numerator);
+	bool isNumberLessThenZero = false;
+
+	int numerator = m_numerator;
 	int denominator = m_denominator;
+	int wholePart = 0;
 
-	while (denominator != 0)
+	if (numerator < 0)
 	{
-		std::swap(numerator, denominator);
-		denominator = denominator % numerator;
+		isNumberLessThenZero = true;
+		numerator = abs(numerator);
 	}
-	gcd = (numerator != 0) ? numerator : 1;
 
-	m_numerator /= gcd;
-	m_denominator /= gcd;
+	while (numerator >= denominator)
+	{
+		numerator -= denominator;
+		wholePart++;
+	}
+
+	if (isNumberLessThenZero)
+	{
+		wholePart = -wholePart;
+		numerator = -numerator;
+	}
+
+	CRational rationalPart(numerator, denominator);
+
+	return std::make_pair(wholePart, rationalPart);
 }
 
 const CRational CRational::operator-() const
@@ -62,26 +76,6 @@ const CRational CRational::operator-() const
 const CRational CRational::operator+() const
 {
 	return *this;
-}
-
-CRational const operator+(CRational const& firstValue, CRational const& secondValue)
-{
-	return CRational(firstValue.GetNumerator() * secondValue.GetDenominator() + secondValue.GetNumerator() * firstValue.GetDenominator(), firstValue.GetDenominator() * secondValue.GetDenominator());
-}
-
-CRational const operator-(CRational const& firstValue, CRational const& secondValue)
-{
-	return firstValue + (-secondValue);
-}
-
-CRational const operator*(CRational const& firstValue, CRational const& secondValue)
-{
-	return CRational(firstValue.GetNumerator() * secondValue.GetNumerator(), firstValue.GetDenominator() * secondValue.GetDenominator());
-}
-
-CRational const operator/(CRational const& firstValue, CRational const& secondValue)
-{
-	return CRational(secondValue.GetDenominator(), secondValue.GetNumerator()) * firstValue;
 }
 
 CRational& CRational::operator+=(CRational const& value)
@@ -110,6 +104,43 @@ CRational& CRational::operator/=(CRational const& value)
 	*this = *this / value;
 
 	return *this;
+}
+
+void CRational::Normalize()
+{
+	int gcd;
+	int numerator = abs(m_numerator);
+	int denominator = m_denominator;
+
+	while (denominator != 0)
+	{
+		std::swap(numerator, denominator);
+		denominator = denominator % numerator;
+	}
+	gcd = (numerator != 0) ? numerator : 1;
+
+	m_numerator /= gcd;
+	m_denominator /= gcd;
+}
+
+CRational const operator+(CRational const& firstValue, CRational const& secondValue)
+{
+	return CRational(firstValue.GetNumerator() * secondValue.GetDenominator() + secondValue.GetNumerator() * firstValue.GetDenominator(), firstValue.GetDenominator() * secondValue.GetDenominator());
+}
+
+CRational const operator-(CRational const& firstValue, CRational const& secondValue)
+{
+	return firstValue + (-secondValue);
+}
+
+CRational const operator*(CRational const& firstValue, CRational const& secondValue)
+{
+	return CRational(firstValue.GetNumerator() * secondValue.GetNumerator(), firstValue.GetDenominator() * secondValue.GetDenominator());
+}
+
+CRational const operator/(CRational const& firstValue, CRational const& secondValue)
+{
+	return CRational(secondValue.GetDenominator(), secondValue.GetNumerator()) * firstValue;
 }
 
 bool operator==(CRational const& firstValue, CRational const& secondValue)
@@ -163,35 +194,4 @@ std::istream& operator>>(std::istream& input, CRational& rational)
 	}
 
 	return input;
-}
-
-std::pair<int, CRational> CRational::ToCompoundFraction() const
-{
-	bool isNumberNegative = false;
-
-	int numerator = m_numerator;
-	int denominator = m_denominator;
-	int intPart = 0;
-
-	if (numerator < 0)
-	{
-		isNumberNegative = true;
-		numerator = abs(numerator);
-	}
-
-	while (numerator >= denominator)
-	{
-		numerator -= denominator;
-		intPart++;
-	}
-
-	if (isNumberNegative)
-	{
-		intPart = -intPart;
-		numerator = -numerator;
-	}
-
-	CRational rationalPart(numerator, denominator);
-
-	return std::make_pair(intPart, rationalPart);
 }
