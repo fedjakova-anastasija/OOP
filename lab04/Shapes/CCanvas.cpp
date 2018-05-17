@@ -34,7 +34,7 @@ void CCanvas::FillPolygon(const std::vector<CPoint>& points, uint32_t fillColor)
 	m_window.draw(polygon);
 }
 
-void CCanvas::DrawCircle(const CPoint& center, const double radius, uint32_t lineColor)
+void CCanvas::DrawCircle(const CPoint& center, double radius, uint32_t lineColor)
 {
 	sf::CircleShape circle(static_cast<float>(radius));
 	circle.setPosition(sf::Vector2f(static_cast<float>(center.x), static_cast<float>(center.y)));
@@ -46,7 +46,7 @@ void CCanvas::DrawCircle(const CPoint& center, const double radius, uint32_t lin
 	m_window.draw(circle);
 }
 
-void CCanvas::FillCircle(const CPoint& center, const double radius, uint32_t fillColor)
+void CCanvas::FillCircle(const CPoint& center, double radius, uint32_t fillColor)
 {
 	sf::CircleShape circle(static_cast<float>(radius));
 

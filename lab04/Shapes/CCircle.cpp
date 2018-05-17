@@ -6,9 +6,8 @@
 CCircle::CCircle(const CPoint& circleCenter, const double circleRadius, const std::string& outlineColor, const std::string& fillColor)
 	: m_center(circleCenter)
 	, m_radius(circleRadius)
+	, CSolidShape(outlineColor, fillColor)
 {
-	SetFillColor(fillColor);
-	SetOutlineColor(outlineColor);
 }
 
 std::string CCircle::ToString() const

@@ -7,9 +7,8 @@ CTriangle::CTriangle(const CPoint& vertex1, const CPoint& vertex2, const CPoint&
 	: m_vertex1(vertex1)
 	, m_vertex2(vertex2)
 	, m_vertex3(vertex3)
+	, CSolidShape(outlineColor, fillColor)
 {
-	SetFillColor(fillColor);
-	SetOutlineColor(outlineColor);
 }
 
 std::string CTriangle::ToString() const

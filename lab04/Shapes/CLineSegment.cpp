@@ -6,8 +6,8 @@
 CLineSegment::CLineSegment(const CPoint& start, const CPoint& end, const std::string& lineColor)
 	: m_start(start)
 	, m_end(end)
+	, CShape(lineColor)
 {
-	CShape::SetOutlineColor(lineColor);
 }
 
 std::string CLineSegment::ToString() const

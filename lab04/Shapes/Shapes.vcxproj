@@ -153,7 +153,8 @@
       <AdditionalLibraryDirectories>C:\Users\Acer\Desktop\Study\OOP\SFML-2.4.2\lib</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy "E:\!sdk\SFML\bin\$(PlatformTarget)\$(Configuration)" "$(TargetDir)" /Y /E /I </Command>
+      <Command>
+      </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -177,7 +178,8 @@
       <AdditionalLibraryDirectories>C:\Users\Acer\Desktop\Study\OOP\SFML-2.4.2\lib</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy "E:\!sdk\SFML\bin\$(PlatformTarget)\$(Configuration)" "$(TargetDir)" /Y /E /I </Command>
+      <Command>
+      </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>

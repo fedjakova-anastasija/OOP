@@ -7,9 +7,8 @@ CRectangle::CRectangle(const CPoint& leftTop, const double width, const double h
 	: m_leftTop(leftTop)
 	, m_width(width)
 	, m_height(height)
+	, CSolidShape::CSolidShape(outlineColor, fillColor)
 {
-	SetFillColor(fillColor);
-	SetOutlineColor(outlineColor);
 }
 
 std::string CRectangle::ToString() const

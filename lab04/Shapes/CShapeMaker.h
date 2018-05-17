@@ -23,7 +23,7 @@ private:
 	void AddTriangle(std::istream& args);
 	void GetShapeWithMinPerimeter(std::istream& args) const;
 	void GetShapeWithMaxArea(std::istream& args) const;
-	void AddFFToColor(std::string& color) const;
+	void AddFFToColorIfNeeded(std::string& color) const;
 	void Info(std::istream& args);
 	void ArrayVoidCheck() const;
 

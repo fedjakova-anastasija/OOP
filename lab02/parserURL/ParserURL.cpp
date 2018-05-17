@@ -64,14 +64,14 @@ Protocol ParseProtocol(const std::string& protocolStr)
 	throw std::invalid_argument("Unknown protocol");
 }
 
-int ParsePort(const std::string& str, Protocol protocol)
+int ParsePort(const std::string& strPort, Protocol protocol)
 {
-	if (str.empty())
+	if (strPort.empty())
 	{
 		return static_cast<int>(protocol);
 	}
 
-	int port = std::stoi(str);
+	int port = std::stoi(strPort);
 	if (port < MIN_BOUND || port > MAX_BOUND)
 	{
 		throw std::invalid_argument("Port is out of range 1, 65535");

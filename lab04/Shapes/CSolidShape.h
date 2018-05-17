@@ -6,11 +6,9 @@ class CSolidShape : public ISolidShape
 	, public CShape
 {
 public:
-	CSolidShape() = default;
-	virtual ~CSolidShape() = default;
+	CSolidShape(const std::string& outlineColor, const std::string& fillColor);
 	std::string GetOutlineColor() const override;
 	std::string GetFillColor() const override;
-	void SetFillColor(const std::string& fillColor);
 
 private:
 	std::string m_fillColor;

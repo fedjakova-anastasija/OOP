@@ -7,26 +7,26 @@ CShapeMaker::CShapeMaker(std::istream& input, std::ostream& output)
 	: m_input(input)
 	, m_output(output)
 	, m_action({ { ADD_CIRCLE, bind(&CShapeMaker::AddCircle, this, std::placeholders::_1) },
-		{ ADD_RECTANGLE, bind(&CShapeMaker::AddRectangle, this, std::placeholders::_1) },
-		{ ADD_TRIANGLE, bind(&CShapeMaker::AddTriangle, this, std::placeholders::_1) },
-		{ ADD_LINE, bind(&CShapeMaker::AddLine, this, std::placeholders::_1) },
-		{ GET_MIN_PERIMETER, bind(&CShapeMaker::GetShapeWithMinPerimeter, this, std::placeholders::_1) },
-		{ GET_MAX_AREA, bind(&CShapeMaker::GetShapeWithMaxArea, this, std::placeholders::_1) },
-		{ DRAW_SHAPES, bind(&CShapeMaker::DrawShapes, this, std::placeholders::_1) },
-		{ INFO, bind(&CShapeMaker::Info, this, std::placeholders::_1) } })
+		  { ADD_RECTANGLE, bind(&CShapeMaker::AddRectangle, this, std::placeholders::_1) },
+		  { ADD_TRIANGLE, bind(&CShapeMaker::AddTriangle, this, std::placeholders::_1) },
+		  { ADD_LINE, bind(&CShapeMaker::AddLine, this, std::placeholders::_1) },
+		  { GET_MIN_PERIMETER, bind(&CShapeMaker::GetShapeWithMinPerimeter, this, std::placeholders::_1) },
+		  { GET_MAX_AREA, bind(&CShapeMaker::GetShapeWithMaxArea, this, std::placeholders::_1) },
+		  { DRAW_SHAPES, bind(&CShapeMaker::DrawShapes, this, std::placeholders::_1) },
+		  { INFO, bind(&CShapeMaker::Info, this, std::placeholders::_1) } })
 {
 }
 
 void CShapeMaker::Info(std::istream& args)
 {
 	std::cout << "-> Add a circle: " << ADD_CIRCLE << std::endl
-		<< "-> Add a rectangle: " << ADD_RECTANGLE << std::endl
-		<< "-> Add a triangle: " << ADD_TRIANGLE << std::endl
-		<< "-> Add a line: " << ADD_LINE << std::endl
-		<< "--> Get min shape perimeter: " << GET_MIN_PERIMETER << std::endl
-		<< "--> Get max shape area: " << GET_MAX_AREA << std::endl
-		<< "---> Draw shapes: " << DRAW_SHAPES << std::endl
-		<< "----> Info: " << INFO << std::endl;
+			  << "-> Add a rectangle: " << ADD_RECTANGLE << std::endl
+			  << "-> Add a triangle: " << ADD_TRIANGLE << std::endl
+			  << "-> Add a line: " << ADD_LINE << std::endl
+			  << "--> Get min shape perimeter: " << GET_MIN_PERIMETER << std::endl
+			  << "--> Get max shape area: " << GET_MAX_AREA << std::endl
+			  << "---> Draw shapes: " << DRAW_SHAPES << std::endl
+			  << "----> Info: " << INFO << std::endl;
 }
 
 bool CShapeMaker::HandleCommand()
@@ -48,7 +48,7 @@ bool CShapeMaker::HandleCommand()
 	return false;
 }
 
-void CShapeMaker::AddFFToColor(std::string& color) const
+void CShapeMaker::AddFFToColorIfNeeded(std::string& color) const
 {
 	if (color.size() == COLOR_LENGTH)
 	{
@@ -96,28 +96,22 @@ void CShapeMaker::GetShapeWithMinPerimeter(std::istream& args) const
 {
 	ArrayVoidCheck();
 
-	auto GetMinShapePtr = [](const std::shared_ptr<IShape>& shapeFirst, const std::shared_ptr<IShape>& shapeSecond) {
+	auto shapeWithMinPerimeter = std::min_element(m_shapes.begin(), m_shapes.end(), [](const std::shared_ptr<IShape>& shapeFirst, const std::shared_ptr<IShape>& shapeSecond) {
 		return shapeFirst->GetPerimeter() < shapeSecond->GetPerimeter();
-	};
-
-	auto shapeWithMinPerimeter = *std::min_element(m_shapes.begin(), m_shapes.end(), GetMinShapePtr);
+	});
 	m_output << std::endl;
 	m_output << "Shape with MIN perimeter: " << std::endl;
-	m_output << shapeWithMinPerimeter->ToString() << std::endl;
+	m_output << (*shapeWithMinPerimeter)->ToString() << std::endl;
 }
 
 void CShapeMaker::GetShapeWithMaxArea(std::istream& args) const
 {
 	ArrayVoidCheck();
 
-	auto GetMaxShapePtr = [](const std::shared_ptr<IShape>& shapeFirst, const std::shared_ptr<IShape>& shapeSecond) {
-		return shapeFirst->GetArea() < shapeSecond->GetArea();
-	};
-
-	auto shapeWithMaxArea = *std::max_element(m_shapes.begin(), m_shapes.end(), GetMaxShapePtr);
+	auto shapeWithMaxArea = std::max_element(m_shapes.begin(), m_shapes.end(), [](const std::shared_ptr<IShape>& shapeFirst, const std::shared_ptr<IShape>& shapeSecond) { return shapeFirst->GetArea() < shapeSecond->GetArea(); });
 	m_output << std::endl;
 	m_output << "Shape with MAX area: " << std::endl;
-	m_output << shapeWithMaxArea->ToString() << std::endl;
+	m_output << (*shapeWithMaxArea)->ToString() << std::endl;
 }
 
 void CShapeMaker::AddCircle(std::istream& args)
@@ -134,8 +128,8 @@ void CShapeMaker::AddCircle(std::istream& args)
 			m_output << "Radius less than 0" << std::endl;
 		}
 
-		AddFFToColor(outlineColor);
-		AddFFToColor(fillColor);
+		AddFFToColorIfNeeded(outlineColor);
+		AddFFToColorIfNeeded(fillColor);
 
 		auto circlePtr = std::make_shared<CCircle>(center, radius, outlineColor, fillColor);
 		m_shapes.push_back(std::move(circlePtr));
@@ -154,7 +148,7 @@ void CShapeMaker::AddLine(std::istream& args)
 
 	if (args >> start.x >> start.y >> end.x >> end.y >> outlineColor)
 	{
-		AddFFToColor(outlineColor);
+		AddFFToColorIfNeeded(outlineColor);
 
 		auto linePtr = std::make_shared<CLineSegment>(start, end, outlineColor);
 		m_shapes.push_back(std::move(linePtr));
@@ -175,8 +169,8 @@ void CShapeMaker::AddRectangle(std::istream& args)
 
 	if (args >> leftTop.x >> leftTop.y >> width >> height >> outlineColor >> fillColor)
 	{
-		AddFFToColor(outlineColor);
-		AddFFToColor(fillColor);
+		AddFFToColorIfNeeded(outlineColor);
+		AddFFToColorIfNeeded(fillColor);
 
 		if (width < 0)
 		{
@@ -207,8 +201,8 @@ void CShapeMaker::AddTriangle(std::istream& args)
 
 	if (args >> vertex1.x >> vertex1.y >> vertex2.x >> vertex2.y >> vertex3.x >> vertex3.y >> outlineColor >> fillColor)
 	{
-		AddFFToColor(outlineColor);
-		AddFFToColor(fillColor);
+		AddFFToColorIfNeeded(outlineColor);
+		AddFFToColorIfNeeded(fillColor);
 
 		auto trianglePtr = std::make_shared<CTriangle>(vertex1, vertex2, vertex3, outlineColor, fillColor);
 		m_shapes.push_back(std::move(trianglePtr));

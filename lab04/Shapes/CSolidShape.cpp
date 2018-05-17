@@ -1,9 +1,10 @@
 #include "stdafx.h"
 #include "CSolidShape.h"
 
-void CSolidShape::SetFillColor(const std::string& fillColor)
+CSolidShape::CSolidShape(const std::string& outlineColor, const std::string& fillColor)
+	: CShape(outlineColor)
+	, m_fillColor(fillColor)
 {
-	m_fillColor = fillColor;
 }
 
 std::string CSolidShape::GetOutlineColor() const
