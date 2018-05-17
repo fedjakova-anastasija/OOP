@@ -62,6 +62,12 @@ TEST_CASE("Check CRational", "[CRational]")
 			CRational rational(1, 4);
 			CheckValue(rational + 1, 5, 4);
 		}
+
+		SECTION("an integer")
+		{
+			CRational rational(1, 4);
+			CheckValue(1 + rational, 5, 4);
+		}
 	}
 
 	SECTION("Binary '-' returns the result of the difference of")
@@ -72,10 +78,17 @@ TEST_CASE("Check CRational", "[CRational]")
 			CRational rationalSecond(3, 2);
 			CheckValue(rationalFirst - rationalSecond, -1, 1);
 		}
+
 		SECTION("an integer")
 		{
 			CRational rational(1, 2);
 			CheckValue(rational - 1, -1, 2);
+		}
+
+		SECTION("an integer")
+		{
+			CRational rational(1, 2);
+			CheckValue(1 - rational, 1, 2);
 		}
 	}
 
@@ -125,6 +138,12 @@ TEST_CASE("Check CRational", "[CRational]")
 			CRational rational(1, 2);
 			CheckValue(rational * -3, -3, 2);
 		}
+
+		SECTION("integer")
+		{
+			CRational rational(1, 2);
+			CheckValue(7 * rational, 7, 2);
+		}
 	}
 
 	SECTION("Operation '/' returns a quotient of a rational number with")
@@ -140,6 +159,12 @@ TEST_CASE("Check CRational", "[CRational]")
 		{
 			CRational rational(1, 2);
 			CheckValue(rational / 3, 1, 6);
+		}
+
+		SECTION("an integer")
+		{
+			CRational rational(1, 2);
+			CheckValue(3 / rational, 6, 1);
 		}
 	}
 
@@ -183,6 +208,7 @@ TEST_CASE("Check CRational", "[CRational]")
 			CRational rationalSecond(2, 4);
 
 			REQUIRE(rationalFirst == rationalFirst);
+			REQUIRE_FALSE(rationalFirst == 1/3);
 			REQUIRE(rationalFirst == rationalSecond);
 		}
 
@@ -190,7 +216,10 @@ TEST_CASE("Check CRational", "[CRational]")
 		{
 			CRational rational(4);
 
-			REQUIRE(4 == rational);
+			REQUIRE(4 == rational); 
+			REQUIRE_FALSE(1/2 == rational);
+			REQUIRE(rational == 4);
+			REQUIRE_FALSE(rational == 1 / 2);
 		}
 	}
 
@@ -202,6 +231,7 @@ TEST_CASE("Check CRational", "[CRational]")
 			CRational rationalSecond(4, 11);
 
 			REQUIRE(rationalFirst != rationalSecond);
+			REQUIRE_FALSE(rationalFirst != rationalFirst);
 		}
 
 		SECTION("an integer")
@@ -209,6 +239,9 @@ TEST_CASE("Check CRational", "[CRational]")
 			CRational rational(1);
 
 			REQUIRE(4 != rational);
+			REQUIRE_FALSE(rational != rational);
+			REQUIRE(rational != 4);
+			REQUIRE_FALSE(rational != 9/9);
 		}
 	}
 
@@ -220,6 +253,7 @@ TEST_CASE("Check CRational", "[CRational]")
 			CRational rationalSecond(1, 2);
 
 			REQUIRE(rationalFirst < rationalSecond);
+			REQUIRE_FALSE(rationalSecond < rationalFirst);
 		}
 
 		SECTION("an integer")
@@ -227,6 +261,7 @@ TEST_CASE("Check CRational", "[CRational]")
 			CRational rational(1, 3);
 
 			REQUIRE(rational < 1);
+			REQUIRE_FALSE(1 < rational);
 		}
 	}
 
@@ -238,12 +273,14 @@ TEST_CASE("Check CRational", "[CRational]")
 			CRational rationalSecond(3, 9);
 
 			REQUIRE(rationalFirst <= rationalSecond);
+			REQUIRE_FALSE(rationalFirst <= 1/4);
 		}
 
 		SECTION("an integer")
 		{
 			CRational rational(1, 3);
 			REQUIRE(rational <= 1);
+			REQUIRE_FALSE(1 <= rational);
 		}
 	}
 
@@ -255,12 +292,14 @@ TEST_CASE("Check CRational", "[CRational]")
 			CRational rationalSecond(1, 3);
 
 			REQUIRE(rationalFirst > rationalSecond);
+			REQUIRE_FALSE(rationalSecond > rationalFirst);
 		}
 
 		SECTION("an integer")
 		{
 			CRational rational(1, 3);
 			REQUIRE(1 > rational);
+			REQUIRE_FALSE(rational > 1);
 		}
 	}
 
@@ -272,12 +311,14 @@ TEST_CASE("Check CRational", "[CRational]")
 			CRational rationalSecond(1, 2);
 
 			REQUIRE(rationalFirst >= rationalSecond);
+			REQUIRE_FALSE(1/4 >= rationalFirst);
 		}
 
 		SECTION("an integer")
 		{
 			CRational rational(1, 3);
 			REQUIRE(rational >= 0);
+			REQUIRE_FALSE(0 >= rational);
 		}
 	}
 
@@ -343,6 +384,22 @@ TEST_CASE("Check CRational", "[CRational]")
 			CRational rational(-4, 3);
 			std::pair<int, CRational> newRational = rational.ToCompoundFraction();
 			REQUIRE(newRational.first == -1);
+			REQUIRE(newRational.second == CRational(-1, 3));
+		}
+
+		SECTION("positive rational without int part")
+		{
+			CRational rational(1, 3);
+			std::pair<int, CRational> newRational = rational.ToCompoundFraction();
+			REQUIRE(newRational.first == 0);
+			REQUIRE(newRational.second == CRational(1, 3));
+		}
+
+		SECTION("negative rational without int part")
+		{
+			CRational rational(-1, 3);
+			std::pair<int, CRational> newRational = rational.ToCompoundFraction();
+			REQUIRE(newRational.first == 0);
 			REQUIRE(newRational.second == CRational(-1, 3));
 		}
 	}

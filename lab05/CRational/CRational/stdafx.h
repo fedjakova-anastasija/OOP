@@ -12,7 +12,7 @@
 
 #include <iostream>
 #include <cmath>
-
+#include <numeric>
 
 
 // TODO: reference additional headers your program requires here

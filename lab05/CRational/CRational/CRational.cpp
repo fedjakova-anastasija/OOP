@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "CRational.h"
 
+using namespace std;
+
 CRational::CRational(int numerator, int denominator)
 	: m_numerator(numerator)
 	, m_denominator(denominator)
@@ -39,31 +41,9 @@ double CRational::ToDouble() const
 
 std::pair<int, CRational> CRational::ToCompoundFraction() const
 {
-	bool isNumberLessThenZero = false;
-
-	int numerator = m_numerator;
-	int denominator = m_denominator;
-	int wholePart = 0;
-
-	if (numerator < 0)
-	{
-		isNumberLessThenZero = true;
-		numerator = abs(numerator);
-	}
-
-	while (numerator >= denominator)
-	{
-		numerator -= denominator;
-		wholePart++;
-	}
-
-	if (isNumberLessThenZero)
-	{
-		wholePart = -wholePart;
-		numerator = -numerator;
-	}
-
-	CRational rationalPart(numerator, denominator);
+	auto wholePart = static_cast<int>(ToDouble());
+	auto numerator = m_numerator - (wholePart * m_denominator);
+	CRational rationalPart(numerator, m_denominator);
 
 	return std::make_pair(wholePart, rationalPart);
 }
@@ -108,6 +88,13 @@ CRational& CRational::operator/=(CRational const& value)
 
 void CRational::Normalize()
 {
+	/*int gcd = std:gcd(m_numerator, m_denominator);
+	if (gcd != INT_MIN)
+	{
+		m_numerator /= gcd;
+		m_denominator /= gcd;
+	}*/
+
 	int gcd;
 	int numerator = abs(m_numerator);
 	int denominator = m_denominator;
