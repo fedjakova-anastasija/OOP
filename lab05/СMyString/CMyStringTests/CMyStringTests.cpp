@@ -2,16 +2,16 @@
 #include "../CMyString/CMyString.h"
 #include <sstream>
 
-bool AreStringsEqual(const CMyString& stringFirst, const char* stringSecond, size_t length)
+bool AreStringsEqual(const CMyString& firstString, const char* secondString, size_t length)
 {
-	if (stringFirst.GetLength() != length)
+	if (firstString.GetLength() != length)
 	{
 		return false;
 	}
 
 	for (size_t i = 0; i < length; ++i)
 	{
-		if (stringFirst.GetStringData()[i] != stringSecond[i])
+		if (firstString.GetStringData()[i] != secondString[i])
 		{
 			return false;
 		}
@@ -38,42 +38,48 @@ TEST_CASE("Test CMString", "[CMyString]")
 	{
 		CMyString string("Hello");
 		REQUIRE(AreStringsEqual(string, "Hello", 5));
+		CMyString secondString("Hello\0word");
+		REQUIRE(AreStringsEqual(secondString, "Hello\0word", 5));
 	}
 
 	SECTION("Empty string with length returns its own instance")
 	{
-		CMyString string("", 0);
-		REQUIRE(AreStringsEqual(string, "", 0));
+		CMyString firstString("", 0);
+		REQUIRE(AreStringsEqual(firstString, "", 0));
+		CMyString secondString("\0", 0);
+		REQUIRE(AreStringsEqual(secondString, "\0", 0));
 	}
 
 	SECTION("A non-empty string with length returns its own instance")
 	{
-		CMyString string("Hello", 5);
-		REQUIRE(AreStringsEqual(string, "Hello", 5));
+		CMyString firstString("Hello", 5);
+		REQUIRE(AreStringsEqual(firstString, "Hello", 5));
+		CMyString secondString("Hello\0word", 10);
+		REQUIRE(AreStringsEqual(secondString, "Hello\0word", 10));
 	}
 
 	SECTION("STL library string returns its own instance")
 	{
 		std::string str("");
-		CMyString stringFirst(str);
-		REQUIRE(AreStringsEqual(stringFirst, str.c_str(), str.length()));
+		CMyString firstString(str);
+		REQUIRE(AreStringsEqual(firstString, str.c_str(), str.length()));
 		str = "Hello";
-		CMyString stringSecond(str);
-		REQUIRE(AreStringsEqual(stringSecond, str.c_str(), str.length()));
+		CMyString secondString(str);
+		REQUIRE(AreStringsEqual(secondString, str.c_str(), str.length()));
 	}
 
 	SECTION("CMyString instance returns its own instance using copy constructor")
 	{
-		CMyString stringFirst("Hello");
-		CMyString stringSecond(stringFirst);
-		REQUIRE(AreStringsEqual(stringSecond, stringFirst.GetStringData(), stringFirst.GetLength()));
+		CMyString firstString("Hello");
+		CMyString secondString(firstString);
+		REQUIRE(AreStringsEqual(secondString, firstString.GetStringData(), firstString.GetLength()));
 	}
 
 	SECTION("CMyString instance returns its own instance using move constructor")
 	{
 		CMyString string("Hello");
-		CMyString string1(std::move(string));
-		REQUIRE(AreStringsEqual(string1, "Hello", 5));
+		CMyString firstString(std::move(string));
+		REQUIRE(AreStringsEqual(firstString, "Hello", 5));
 	}
 }
 
@@ -114,23 +120,8 @@ TEST_CASE("Check SubString")
 	SECTION("SubString errors")
 	{
 		CMyString string("Hello");
-		try
-		{
-			CMyString str = string.SubString(-1, 4);
-		}
-		catch (std::invalid_argument const& error)
-		{
-			CHECK_THROWS_AS(static_cast<const std::string&>("Wrong start position or length") == error.what());
-		}
-
-		try
-		{
-			CMyString str = string.SubString(2, 5);
-		}
-		catch (std::invalid_argument const& error)
-		{
-			REQUIRE(static_cast<const std::string&>("Wrong start position or length") == error.what());
-		}
+		REQUIRE_THROWS_AS(string.SubString(-1, 4), std::out_of_range);
+		REQUIRE_THROWS_AS(string.SubString(2, 5), std::out_of_range);
 	}
 }
 
@@ -144,28 +135,20 @@ TEST_CASE("Check Clear")
 	}
 }
 
-struct CMyStringFixture
-{
-	size_t stringLength = 5;
-	CMyString string;
-	CMyStringFixture()
-		: string("Hello", stringLength)
-	{
-	}
-};
-
-TEST_CASE_METHOD(CMyStringFixture, "overloaded operator")
+TEST_CASE("Test methods")
 {
 	SECTION("Operator =")
 	{
 		SECTION("Return itself")
 		{
+			CMyString string("Hello");
 			string = string;
-			REQUIRE(AreStringsEqual(string, "Hello", stringLength));
+			REQUIRE(AreStringsEqual(string, "Hello", 5)); 
 		}
 
 		SECTION("changes data of first string to the data of second")
 		{
+			CMyString string("Hello");
 			CMyString newString("Hi");
 			string = newString;
 			REQUIRE(AreStringsEqual(string, "Hi", 2));
@@ -176,7 +159,8 @@ TEST_CASE_METHOD(CMyStringFixture, "overloaded operator")
 	{
 		SECTION("Return result of addition of two instances of class CMyString")
 		{
-			string = "Hello";
+			CMyString string("Hello");
+			CMyString newString("Hi");
 			CMyString addedString("word");
 			CMyString result = string + addedString;
 			REQUIRE(result == "Helloword");
@@ -184,6 +168,7 @@ TEST_CASE_METHOD(CMyStringFixture, "overloaded operator")
 
 		SECTION("Return result of adding instance of class CMyString and class std::string")
 		{
+			CMyString string("Hello");
 			std::string addedString("word");
 			CMyString result = string + addedString;
 			REQUIRE(result == "Helloword");
@@ -191,6 +176,7 @@ TEST_CASE_METHOD(CMyStringFixture, "overloaded operator")
 
 		SECTION("Return result of adding instance of class CMyString and const char*")
 		{
+			CMyString string("Hello");
 			CMyString result = string + "word";
 			REQUIRE(result == "Helloword");
 		}
@@ -200,6 +186,7 @@ TEST_CASE_METHOD(CMyStringFixture, "overloaded operator")
 	{
 		SECTION("Add addedString to string of the class CMyString")
 		{
+			CMyString string("Hello");
 			CMyString addedString("word");
 			string += addedString;
 			REQUIRE(AreStringsEqual(string, "Helloword", 9));
@@ -210,8 +197,11 @@ TEST_CASE_METHOD(CMyStringFixture, "overloaded operator")
 	{
 		SECTION("Returns true if strings are equal")
 		{
-			CMyString equalString("Hello");
+			CMyString string("Hello");
+			CMyString equalString("Hello"); 
+			CMyString notEqualString("Hi");
 			REQUIRE(string == equalString);
+			REQUIRE_FALSE(string == notEqualString);
 		}
 	}
 
@@ -219,8 +209,11 @@ TEST_CASE_METHOD(CMyStringFixture, "overloaded operator")
 	{
 		SECTION("Returns false if they are not equal")
 		{
+			CMyString string("Hello");
+			CMyString equalString("Hello");
 			CMyString notEqualString("Hi");
-			REQUIRE_FALSE(string == notEqualString);
+			REQUIRE(string != notEqualString);
+			REQUIRE_FALSE(string != equalString);
 		}
 	}
 
@@ -228,6 +221,7 @@ TEST_CASE_METHOD(CMyStringFixture, "overloaded operator")
 	{
 		SECTION("Read character from string by index")
 		{
+			CMyString string("Hello");
 			auto ch = string[0];
 			REQUIRE(ch == 'H');
 			ch = string[2];
@@ -236,23 +230,8 @@ TEST_CASE_METHOD(CMyStringFixture, "overloaded operator")
 
 		SECTION("Operator [] errors")
 		{
-			try
-			{
-				auto ch = string[-1];
-			}
-			catch (std::invalid_argument const& error)
-			{
-				REQUIRE(static_cast<const std::string&>("Wrong index") == error.what());
-			}
-
-			try
-			{
-				auto ch = string[6];
-			}
-			catch (std::invalid_argument const& error)
-			{
-				REQUIRE(static_cast<const std::string&>("Wrong index") == error.what());
-			}
+			CMyString string("Hello");
+			REQUIRE_THROWS_AS(string[6], std::out_of_range);
 		}
 	}
 
@@ -270,23 +249,7 @@ TEST_CASE_METHOD(CMyStringFixture, "overloaded operator")
 		{
 			CMyString str("Hello");
 			auto ch = 'l';
-			try
-			{
-				str[-1] = ch;
-			}
-			catch (std::invalid_argument const& error)
-			{
-				REQUIRE(static_cast<const std::string&>("Wrong index") == error.what());
-			}
-
-			try
-			{
-				str[7] = ch;
-			}
-			catch (std::invalid_argument const& error)
-			{
-				REQUIRE(static_cast<const std::string&>("Wrong index") == error.what());
-			}
+			REQUIRE_THROWS_AS(str[7] = ch, std::out_of_range);
 		}
 	}
 
@@ -294,8 +257,11 @@ TEST_CASE_METHOD(CMyStringFixture, "overloaded operator")
 	{
 		SECTION("Return true if longString is more than string")
 		{
+			CMyString string("Hello");
 			CMyString longString("Helloword");
+			CMyString shortString("Hi");
 			REQUIRE(string < longString);
+			REQUIRE_FALSE(string < shortString);
 		}
 	}
 
@@ -303,8 +269,11 @@ TEST_CASE_METHOD(CMyStringFixture, "overloaded operator")
 	{
 		SECTION("Return true if longString is more or equal than string")
 		{
+			CMyString string("Hello");
 			CMyString longString("Hello");
+			CMyString shortString("Hi");
 			REQUIRE(longString >= string);
+			REQUIRE_FALSE(shortString >= string);
 		}
 	}
 
@@ -312,8 +281,11 @@ TEST_CASE_METHOD(CMyStringFixture, "overloaded operator")
 	{
 		SECTION("Return true if longString is more than string")
 		{
+			CMyString string("Hello");
 			CMyString longString("Helloword");
+			CMyString shortString("Hi");
 			REQUIRE(longString > string);
+			REQUIRE_FALSE(shortString > string);
 		}
 	}
 
@@ -321,8 +293,11 @@ TEST_CASE_METHOD(CMyStringFixture, "overloaded operator")
 	{
 		SECTION("Return true if longString is more or equal than string")
 		{
+			CMyString string("Hello");
 			CMyString longString("Helloword");
+			CMyString shortString("Hi");
 			REQUIRE(longString >= string);
+			REQUIRE_FALSE(shortString >= string);
 		}
 	}
 
@@ -341,6 +316,7 @@ TEST_CASE_METHOD(CMyStringFixture, "overloaded operator")
 	{
 		SECTION("Write string into stream")
 		{
+			CMyString string("Hello");
 			std::stringstream strm;
 			strm << string;
 			REQUIRE(strm.str() == "Hello");

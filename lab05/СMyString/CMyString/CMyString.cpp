@@ -71,7 +71,7 @@ CMyString CMyString::SubString(size_t startPos, size_t length = SIZE_MAX) const
 {
 	if ((startPos > m_length) || (startPos < 0) || (startPos + length > m_length))
 	{
-		throw std::invalid_argument("Wrong start position or length");
+		throw std::out_of_range("Wrong start position or length");
 	}
 
 	if (startPos == m_length)
@@ -154,9 +154,9 @@ bool CMyString::operator<=(const CMyString& string) const
 
 char const& CMyString::operator[](size_t index) const
 {
-	if ((index >= m_length) || (index < 0))
+	if (index >= m_length)
 	{
-		throw std::invalid_argument("Wrong index");
+		throw std::out_of_range("Wrong index");
 	}
 
 	return m_pChars[index];
@@ -164,22 +164,22 @@ char const& CMyString::operator[](size_t index) const
 
 char& CMyString::operator[](size_t index)
 {
-	if ((index >= m_length) || (index < 0))
+	if (index >= m_length)
 	{
-		throw std::invalid_argument("Wrong index");
+		throw std::out_of_range("Wrong index");
 	}
 
 	return m_pChars[index];
 }
 
-CMyString const operator+(const std::string& stringFirst, const CMyString& stringSecond)
+CMyString const operator+(const std::string& firstString, const CMyString& secondString)
 {
-	return CMyString(stringFirst) + stringSecond;
+	return CMyString(firstString) + secondString;
 }
 
-CMyString const operator+(const char* stringFirst, const CMyString& stringSecond)
+CMyString const operator+(const char* firstString, const CMyString& secondString)
 {
-	return CMyString(stringFirst) + stringSecond;
+	return CMyString(firstString) + secondString;
 }
 
 std::istream& operator>>(std::istream& stream, CMyString& string)
