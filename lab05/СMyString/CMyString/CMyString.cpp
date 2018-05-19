@@ -90,7 +90,7 @@ void CMyString::Clear()
 
 CMyString& CMyString::operator=(const CMyString& other)
 {
-	if (this != std::addressof(other))
+	if (this != &other)
 	{
 		CMyString tmp(other);
 		std::swap(m_pChars, tmp.m_pChars);
@@ -119,12 +119,7 @@ CMyString const CMyString::operator+=(const CMyString& string)
 
 bool CMyString::operator==(const CMyString& string) const
 {
-	if (m_length != string.m_length)
-	{
-		return false;
-	}
-
-	return memcmp(m_pChars.get(), string.m_pChars.get(), m_length) == 0;
+	return m_length == string.m_length ? memcmp(m_pChars.get(), string.m_pChars.get(), m_length) == 0 : false;
 }
 
 bool CMyString::operator!=(const CMyString& string) const
