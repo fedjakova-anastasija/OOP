@@ -1,32 +1,26 @@
 #include "stdafx.h"
 #include "../HttpUrl/CHttpUrl.h"
 #include "../HttpUrl/CUrlParsingError.h"
-#include <map>
 
-using Protocol = CHttpUrl::Protocol;
-
-const std::map<Protocol, int> PORT = {
+const std::map<Protocol, int> DEFAULT_PORTS = {
 	{ Protocol::HTTP, 80 },
-{ Protocol::HTTPS, 443 },
+	{ Protocol::HTTPS, 443 },
 };
 
-void CheckHttpUrlParsing(const std::string& url, const std::string& expectedUrl,
-	Protocol protocolExpected, int portExpected, const std::string& domainExpected, const std::string& documentExpected)
+void CheckHttpUrlParsing(const std::string& url, Protocol protocolExpected, int portExpected, const std::string& domainExpected, const std::string& documentExpected)
 {
 	CHttpUrl httpUrl(url);
 
-	CHECK(httpUrl.GetUrl() == expectedUrl);
 	CHECK(httpUrl.GetProtocol() == protocolExpected);
 	CHECK(httpUrl.GetDomain() == domainExpected);
 	CHECK(httpUrl.GetPort() == portExpected);
 	CHECK(httpUrl.GetDocument() == documentExpected);
 }
 
-void CheckHttpUrlParsing(const std::string& url, const std::string& expectedUrl,
-	Protocol protocolExpected, const std::string& domainExpected, const std::string& documentExpected)
+void CheckHttpUrlParsing(const std::string& url, Protocol protocolExpected, const std::string& domainExpected, const std::string& documentExpected)
 {
-	const int portExpected = PORT.at(protocolExpected);
-	return CheckHttpUrlParsing(url, expectedUrl, protocolExpected, portExpected, domainExpected, documentExpected);
+	const int portExpected = DEFAULT_PORTS.at(protocolExpected);
+	return CheckHttpUrlParsing(url, protocolExpected, portExpected, domainExpected, documentExpected);
 }
 
 void CheckHttpUrlParsingFail(const std::string& url)
@@ -34,59 +28,58 @@ void CheckHttpUrlParsingFail(const std::string& url)
 	CHECK_THROWS_AS(CHttpUrl(url), CUrlParsingError);
 }
 
-TEST_CASE("Parses sample URL")
+TEST_CASE("Parses URL")
 {
-	std::string url("http://www.mysite.com/docs/document1.html?page=30&lang=en#title");
-	CheckHttpUrlParsing(url, url, Protocol::HTTP, "www.mysite.com", "/docs/document1.html?page=30&lang=en#title");
+	std::string url("http://mail.ru/photos");
+	CheckHttpUrlParsing(url, Protocol::HTTP, "mail.ru", "/photos");
 }
 
-TEST_CASE("Parses URLs with all possible protocols")
+TEST_CASE("Parses URLs with HTTP and HTTPS")
 {
-	CheckHttpUrlParsing("http://abc.com", "http://abc.com/", Protocol::HTTP, "abc.com", "/");
-	CheckHttpUrlParsing("https://abc.com", "https://abc.com/", Protocol::HTTPS, "abc.com", "/");
+	CheckHttpUrlParsing("http://example.com", Protocol::HTTP, "example.com", "/");
+	CheckHttpUrlParsing("https://example.com", Protocol::HTTPS, "example.com", "/");
 }
 
 TEST_CASE("Parses protocols in any letter cases")
 {
-	CheckHttpUrlParsing("hTTp://abc.com", "http://abc.com/", Protocol::HTTP, "abc.com", "/");
-	CheckHttpUrlParsing("httPS://abc.com", "https://abc.com/", Protocol::HTTPS, "abc.com", "/");
+	CheckHttpUrlParsing("httP://example.com", Protocol::HTTP, "example.com", "/");
+	CheckHttpUrlParsing("htTps://example.com", Protocol::HTTPS, "example.com", "/");
 }
 
 TEST_CASE("Fails to parse url without required parts")
 {
-	CheckHttpUrlParsingFail("abc.com");
-	CheckHttpUrlParsingFail("http://:8080/index.html");
-	CheckHttpUrlParsingFail("http:///index.html");
+	CheckHttpUrlParsingFail("example.com");
 	CheckHttpUrlParsingFail("http://");
+	CheckHttpUrlParsingFail("http://:20/example.com");
+	CheckHttpUrlParsingFail("http:/example.com");
 }
 
 TEST_CASE("Parses URL without port")
 {
-	CheckHttpUrlParsing("https://abc.com", "https://abc.com/", Protocol::HTTPS, "abc.com", "/");
-	CheckHttpUrlParsing("http://abc.com/about.htm", "http://abc.com/about.htm", Protocol::HTTP, "abc.com", "/about.htm");
+	CheckHttpUrlParsing("http://example.com", Protocol::HTTP, "example.com", "/");
+	CheckHttpUrlParsing("https://example.com/ex", Protocol::HTTPS, "example.com", "/ex");
 }
 
 TEST_CASE("Fails to parse port out of bounds")
 {
-	CheckHttpUrlParsingFail("https://abc.com:0");
-	CheckHttpUrlParsingFail("http://abc.com:65536");
-	CheckHttpUrlParsingFail("http://abc.com:99999999999999");
+	CheckHttpUrlParsingFail("https://example.com:0");
+	CheckHttpUrlParsingFail("http://example.com:65536");
 }
 
 TEST_CASE("Parses URL with empty document or without document")
 {
-	CheckHttpUrlParsing("https://abc.com", "https://abc.com/", Protocol::HTTPS, "abc.com", "/");
-	CheckHttpUrlParsing("https://abc.com/", "https://abc.com/", Protocol::HTTPS, "abc.com", "/");
+	CheckHttpUrlParsing("http://example.com", Protocol::HTTP, "example.com", "/");
+	CheckHttpUrlParsing("https://example.com/", Protocol::HTTPS, "example.com", "/");
 }
 
 TEST_CASE("Parses URL with default port and hides it")
 {
-	CheckHttpUrlParsing("https://abc.com:443", "https://abc.com/", Protocol::HTTPS, "abc.com", "/");
-	CheckHttpUrlParsing("http://abc.com:80", "http://abc.com/", Protocol::HTTP, "abc.com", "/");
+	CheckHttpUrlParsing("http://example.com:80", Protocol::HTTP, "example.com", "/");
+	CheckHttpUrlParsing("https://example.com:443", Protocol::HTTPS, "example.com", "/");
 }
 
 TEST_CASE("Parses URL with custom port and shows it")
 {
-	CheckHttpUrlParsing("https://abc.com:42", "https://abc.com:42/", Protocol::HTTPS, 42, "abc.com", "/");
-	CheckHttpUrlParsing("http://abc.com:42", "http://abc.com:42/", Protocol::HTTP, 42, "abc.com", "/");
+	CheckHttpUrlParsing("http://example.com:8", Protocol::HTTP, 8, "example.com", "/");
+	CheckHttpUrlParsing("https://example.com:4",  Protocol::HTTPS, 4, "example.com", "/");
 }
