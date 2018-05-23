@@ -57,7 +57,17 @@ CHttpUrl::CHttpUrl(std::string const& domain, std::string const& document, Proto
 	{
 		portString = ":" + std::to_string(m_port);
 	}
-	m_url = GetProtocol() + "://" + m_domain + portString + m_document;
+
+	std::string protocolStr;
+	
+	for (const auto& item : MATCH_PROTOCOL)
+	{
+		if (protocolStr == item.second)
+		{
+			m_protocol = item.first;
+		}
+	}
+	m_url = m_protocol + "://" + m_domain + portString + m_document;
 }
 
 CHttpUrl::CHttpUrl(std::string const& domain, std::string const& document, Protocol protocol, unsigned short port)
@@ -80,7 +90,17 @@ CHttpUrl::CHttpUrl(std::string const& domain, std::string const& document, Proto
 	{
 		portString = ":" + std::to_string(m_port);
 	}
-	m_url = GetProtocol() + "://" + m_domain + portString + m_document;
+
+	std::string protocolStr;
+	
+	for (const auto& item : MATCH_PROTOCOL)
+	{
+		if (protocolStr == item.second)
+		{
+			m_protocol = item.first;
+		}
+	}
+	m_url = m_protocol + "://" + m_domain + portString + m_document;
 }
 
 std::string CHttpUrl::ParseDomain(std::string const& domain)

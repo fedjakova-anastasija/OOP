@@ -36,8 +36,8 @@ TEST_CASE("Test CMString", "[CMyString]")
 
 	SECTION("A non-empty string returns its own instance")
 	{
-		CMyString string("Hello");
-		REQUIRE(AreStringsEqual(string, "Hello", 5));
+		CMyString firstString("Hello");
+		REQUIRE(AreStringsEqual(firstString, "Hello", 5));
 		CMyString secondString("Hello\0word");
 		REQUIRE(AreStringsEqual(secondString, "Hello\0word", 5));
 	}
@@ -231,7 +231,7 @@ TEST_CASE("Test methods")
 		SECTION("Operator [] errors")
 		{
 			CMyString string("Hello");
-			REQUIRE_THROWS_AS(string[6], std::out_of_range);
+			REQUIRE_THROWS_AS(string[string.GetLength() + 1], std::out_of_range);
 		}
 	}
 
@@ -249,7 +249,7 @@ TEST_CASE("Test methods")
 		{
 			CMyString str("Hello");
 			auto ch = 'l';
-			REQUIRE_THROWS_AS(str[7] = ch, std::out_of_range);
+			REQUIRE_THROWS_AS(str[str.GetLength() + 1] = ch, std::out_of_range);
 		}
 	}
 

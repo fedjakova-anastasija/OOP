@@ -60,3 +60,12 @@ TEST_CASE("Fails to parse port out of bounds", "[parseURL]")
 	CHECK(ParseURL("http://example.com:100", protocol, port, host, document));
 	CHECK_FALSE(ParseURL("http://example.com:65536", protocol, port, host, document));
 }
+
+TEST_CASE("Fails to parse correct port", "[parseURL]")
+{
+	int port;
+	std::string host;
+	std::string document;
+	Protocol protocol;
+	CHECK(ParseURL("https://example.com:100", protocol, port, host, document));
+}

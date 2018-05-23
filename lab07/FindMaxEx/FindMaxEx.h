@@ -10,14 +10,16 @@ bool FindMax(std::vector<T> const& arr, T& maxValue, Less const& less = Less())
 		return false;
 	}
 
-	maxValue = arr[0];
-	size_t arrSize = arr.size();
-	for (size_t i = 1; i < arrSize; ++i)
+	auto max = arr.begin();
+
+	for (auto it = arr.begin(); it != arr.end(); it++)
 	{
-		if (less(maxValue, arr[i]))
+		if (less(*max, *it))
 		{
-			maxValue = arr[i];
+			max = it;
 		}
 	}
+
+	maxValue = *max;
 	return true;
 }

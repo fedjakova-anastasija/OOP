@@ -46,11 +46,23 @@ TEST_CASE("Parses protocols in any letter cases")
 	CheckHttpUrlParsing("htTps://example.com", Protocol::HTTPS, "example.com", "/");
 }
 
-TEST_CASE("Fails to parse url without required parts")
+TEST_CASE("Fails to parse only domain")
 {
 	CheckHttpUrlParsingFail("example.com");
+}
+
+TEST_CASE("Fails to parse only protocol")
+{
 	CheckHttpUrlParsingFail("http://");
+}
+
+TEST_CASE("Fails to parse url without domain")
+{
 	CheckHttpUrlParsingFail("http://:20/example.com");
+}
+
+TEST_CASE("Fails to parse url with syntax error")
+{
 	CheckHttpUrlParsingFail("http:/example.com");
 }
 

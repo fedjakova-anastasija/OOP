@@ -12,7 +12,6 @@ public:
 	CMyString(CMyString&& other);
 	CMyString& operator=(CMyString&& other);
 	CMyString(const std::string& stlString);
-	~CMyString(); 
 
 	size_t GetLength() const;
 	const char* GetStringData() const;

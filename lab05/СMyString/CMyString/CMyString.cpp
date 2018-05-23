@@ -53,10 +53,6 @@ CMyString::CMyString(const std::string& stlString)
 {
 }
 
-CMyString::~CMyString()
-{
-}
-
 size_t CMyString::GetLength() const
 {
 	return m_length;
